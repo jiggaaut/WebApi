@@ -1,0 +1,49 @@
+﻿@using WebApi.Models
+@using WebApi.ViewModels  
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               <p>Имя клиента</p>
+            </th>
+            <th>
+               <p>Дата</p>
+            </th>
+            <th>
+               <p>Продукт</p>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (Order o in Model.Orders) {
+        <tr>
+            <td>
+                @o.ClientName
+            </td>
+            <td>
+                @o.Date
+            </td>
+            <td>
+                @foreach (OrderProduct op in o.OrderProducts) {
+                <p>@op.Product.Name</p> 
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@o.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@o.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@o.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
