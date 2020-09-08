@@ -16,12 +16,18 @@
             <div class="form-group">
                 <label asp-for="ClientName" class="control-label"></label>
                 <input asp-for="ClientName" class="form-control" />
-                <span asp-validation-for="ClientName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Продукты</label>
+                @foreach (Product p in ViewBag.Products)
+                {
+                    <br /><input type="checkbox" name="selectedProducts" value="@p.Id"
+                           @(Model.OrderProducts.Contains(p.OrderProducts.FirstOrDefault(x => x.ProductId == p.Id)) ? "checked=\"checked\"" : "") />@p.Name 
+                }
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

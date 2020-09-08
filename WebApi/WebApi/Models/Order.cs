@@ -18,7 +18,5 @@ namespace WebApi.Models
         {
             OrderProducts = new List<OrderProduct>();
         }
-        /*public List<OrderProduct> OrderProducts { get; set; }
-        */
     }
 }

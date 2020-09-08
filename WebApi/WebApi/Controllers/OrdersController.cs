@@ -58,16 +58,16 @@ namespace WebApi.Controllers
         }
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public Order Get(int id)
+        public IActionResult Get(int id)
         {
             var op = db.Orders.Include(o => o.OrderProducts).ThenInclude(p => p.Product).FirstOrDefault(x => x.Id == id);
             if (op == null)
-                return new Order();
-            return op;
+                return new ObjectResult(new Order());
+            return new ObjectResult(op);
         }
         // POST: api/Orders        
         [HttpPost]
-        public ActionResult Post(Order order)
+        public IActionResult Post(Order order)
         {
             if (order == null)
             {
@@ -79,7 +79,7 @@ namespace WebApi.Controllers
         }
         // PUT: api/Orders/5
         [HttpPut]
-        public ActionResult Put(Order order)
+        public IActionResult Put(Order order)
         {
             if (order == null)
             {
@@ -96,7 +96,7 @@ namespace WebApi.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             Order order = db.Orders.FirstOrDefault(x => x.Id == id);
             if (order == null)

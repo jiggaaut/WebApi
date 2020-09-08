@@ -11,7 +11,6 @@ namespace WebApi.Models
     {
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
-        //public DbSet<OrderProducts> OrderProducts { get; set; }
 
         public OrdersContext(DbContextOptions<OrdersContext> options) : base(options)
         {
@@ -35,6 +34,6 @@ namespace WebApi.Models
                 .HasForeignKey(sc => sc.ProductId);
         }
 
-        public DbSet<WebApi.Models.OrderProduct> OrderProduct { get; set; }
+        public DbSet<OrderProduct> OrderProduct { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿@model WebApi.Models.Order
+﻿@using WebApi.Models
+@using WebApi.ViewModels
+@model WebApi.Models.Order
 
 @{
     ViewData["Title"] = "Details";
@@ -21,6 +23,15 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class="col-sm-2">
+            Товар
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (OrderProduct op in Model.OrderProducts)
+            {
+                <p>@op.Product.Name</p>
+            }
         </dd>
     </dl>
 </div>

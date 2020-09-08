@@ -13,16 +13,11 @@ namespace WebApi.Models
         public string Name { get; set; }
         public int Price { get; set; }
         public int Count { get; set; }
-        //[JsonIgnore]
         public List<OrderProduct> OrderProducts { get; set; }
 
         public Product()
         {
             OrderProducts = new List<OrderProduct>();
         }
-        /*
-        public List<OrderProduct> OrderProducts { get; set; }
-        */
-
     }
 }

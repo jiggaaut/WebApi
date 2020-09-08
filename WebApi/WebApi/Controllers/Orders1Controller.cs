@@ -36,7 +36,7 @@ namespace WebApi.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders
+            var order = await _context.Orders.Include(o => o.OrderProducts).ThenInclude(p => p.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -49,6 +49,7 @@ namespace WebApi.Controllers
         // GET: Orders1/Create
         public IActionResult Create()
         {
+            ViewBag.Products = _context.Products.ToList();
             return View();
         }
 
@@ -56,13 +57,21 @@ namespace WebApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClientName,Date")] Order order)
+        public async Task<IActionResult> Create(Order order, int[] selectedProducts)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
+                Order newOrder =_context.Orders.FirstOrDefault(x => x.Equals(order));
+                if (selectedProducts != null)
+                {
+                    for (int i = 0; i < selectedProducts.Length; i++)
+                    {
+                        _context.OrderProduct.Add(new OrderProduct { OrderId = newOrder.Id, ProductId = selectedProducts[i] });
+                        _context.SaveChanges();
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(order);
@@ -71,12 +80,13 @@ namespace WebApi.Controllers
         // GET: Orders1/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ViewBag.Products = _context.Products.ToList();
             if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders.Include(o => o.OrderProducts).ThenInclude(p => p.Product).FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
                 return NotFound();
@@ -88,19 +98,31 @@ namespace WebApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClientName,Date")] Order order)
+        public async Task<IActionResult> Edit(int id, Order order, int[] selectedProducts)
         {
             if (id != order.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(order);
+                    IQueryable<OrderProduct> op = _context.OrderProduct.Where(x => x.OrderId==order.Id);
+                    if (op!=null)
+                    {
+                        _context.OrderProduct.RemoveRange(op);
+                        _context.SaveChanges();
+                    }
+                    if (selectedProducts != null)
+                    {
+                        for (int i = 0; i < selectedProducts.Length; i++)
+                        {
+                            _context.OrderProduct.Add(new OrderProduct { OrderId = order.Id, ProductId = selectedProducts[i] });
+                            _context.SaveChanges();
+                        }            
+                    }
+                    _context.Entry(order).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

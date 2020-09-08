@@ -1,4 +1,5 @@
-﻿@model WebApi.Models.Order
+﻿@using WebApi.Models
+@model WebApi.Models.Order
 
 @{
     ViewData["Title"] = "Create";
@@ -15,12 +16,17 @@
             <div class="form-group">
                 <label asp-for="ClientName" class="control-label"></label>
                 <input asp-for="ClientName" class="form-control" />
-                <span asp-validation-for="ClientName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderProducts" class="control-label"></label>
+                @foreach (Product p in ViewBag.Products)
+                {
+                    <br /><input type="checkbox" name="selectedProducts" value="@p.Id"/>@p.Name 
+                }
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
